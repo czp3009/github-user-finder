@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+    <meta content="Find GitHub users by name, numeric ID, location, repository language, and more." name="description">
+    <meta content="#f7f9f8" name="theme-color">
+    <title>GitHub User Finder</title>
+    <link href="./assets/favicon.svg" rel="icon" type="image/svg+xml">
+    <link href="./styles.css" rel="stylesheet">
+    <script src="./scripts/app.js" type="module"></script>
+</head>
+<body>
+<svg aria-hidden="true" class="icon-definitions" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-search" viewBox="0 0 24 24">
+        <circle cx="10.8" cy="10.8" r="6.8"/>
+        <path d="m16 16 4.5 4.5"/>
+    </symbol>
+    <symbol id="icon-filter" viewBox="0 0 24 24">
+        <path d="M4 6h16M4 12h16M4 18h16"/>
+        <path d="M8 3v6m8 0v6m-6 0v6"/>
+    </symbol>
+    <symbol id="icon-close" viewBox="0 0 24 24">
+        <path d="m6 6 12 12M18 6 6 18"/>
+    </symbol>
+    <symbol id="icon-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14m-6-6 6 6-6 6"/>
+    </symbol>
+    <symbol id="icon-external" viewBox="0 0 24 24">
+        <path d="M14 4h6v6m0-6L10 14"/>
+        <path d="M10 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-5"/>
+    </symbol>
+    <symbol id="icon-users" viewBox="0 0 24 24">
+        <circle cx="9" cy="8" r="3"/>
+        <path d="M3 20v-2a6 6 0 0 1 12 0v2M16 5a3 3 0 0 1 0 6m2 3a5 5 0 0 1 3 4v2"/>
+    </symbol>
+    <symbol id="icon-github" viewBox="0 0 24 24">
+        <path d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.76-.24.76-.54v-2.1c-3.12.68-3.78-1.33-3.78-1.33-.5-1.29-1.24-1.63-1.24-1.63-1.02-.7.08-.68.08-.68 1.13.08 1.73 1.16 1.73 1.16 1 1.72 2.63 1.22 3.27.93.1-.73.39-1.22.71-1.5-2.49-.28-5.1-1.24-5.1-5.54 0-1.22.44-2.22 1.15-3-.11-.28-.5-1.42.11-2.97 0 0 .94-.3 3.08 1.15a10.7 10.7 0 0 1 5.6 0c2.14-1.46 3.08-1.15 3.08-1.15.61 1.55.22 2.69.11 2.97.72.78 1.15 1.78 1.15 3.01 0 4.3-2.62 5.25-5.12 5.53.4.35.76 1.03.76 2.08v3.07c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z" fill="currentColor"
+              stroke="none"/>
+    </symbol>
+</svg>
+
+<header class="site-header">
+    <a aria-label="GitHub User Finder home" class="brand" href="./">
+        <svg aria-hidden="true" class="brand-icon">
+            <use href="#icon-github"/>
+        </svg>
+        <span>GitHub <span class="brand-light">User Finder</span></span>
+    </a>
+    <span class="public-badge"><span class="status-dot"></span>Public users / No sign-in needed</span>
+</header>
+
+<main class="main-content">
+    <section aria-labelledby="page-title" class="search-section">
+        <p class="eyebrow">DISCOVER PEOPLE ON GITHUB</p>
+        <h1 id="page-title">Find your next <span>connection.</span></h1>
+        <p class="intro">Start with a name. Narrow it down with a few filters.</p>
+
+        <form class="search-bar" id="search-form" role="search">
+            <svg aria-hidden="true" class="icon search-icon">
+                <use href="#icon-search"/>
+            </svg>
+            <label class="visually-hidden" for="keyword">Username, name, or numeric ID</label>
+            <input autocomplete="off" id="keyword" maxlength="200" name="keyword" placeholder="Username, name, or numeric ID"
+                   spellcheck="false" type="search">
+            <button aria-label="Clear keyword" class="icon-button" hidden id="clear-keyword" type="button">
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-close"/>
+                </svg>
+            </button>
+            <button aria-controls="advanced-dialog" aria-haspopup="dialog" aria-label="Advanced search" class="icon-button filter-button"
+                    id="open-filters" type="button">
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-filter"/>
+                </svg>
+                <span class="filter-count" hidden id="filter-count"></span></button>
+            <button class="primary-button search-submit" type="submit"><span>Search</span>
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-arrow"/>
+                </svg>
+            </button>
+        </form>
+
+        <div aria-label="Active filters" class="active-filters" hidden id="active-filters"></div>
+        <div class="search-suggestions" id="search-suggestions">
+            <span>Try a search</span>
+            <button data-example="octocat" type="button">octocat
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-arrow"/>
+                </svg>
+            </button>
+            <button data-example="583231" type="button">ID: 583231
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-arrow"/>
+                </svg>
+            </button>
+            <button data-example="developers" type="button">JavaScript developers in Shanghai
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-arrow"/>
+                </svg>
+            </button>
+        </div>
+    </section>
+
+    <section aria-labelledby="results-title" class="results-section" id="results-section">
+        <div class="results-toolbar" hidden id="results-toolbar">
+            <div><h2 id="results-title">Search results <span id="result-count"></span></h2>
+                <p class="result-description" id="result-description"></p></div>
+            <label class="sort-control" for="sort">Sort
+                <select id="sort">
+                    <option value="best">Best match</option>
+                    <option value="followers-desc">Followers: most first</option>
+                    <option value="followers-asc">Followers: fewest first</option>
+                    <option value="repositories-desc">Repositories: most first</option>
+                    <option value="repositories-asc">Repositories: fewest first</option>
+                    <option value="joined-desc">Joined: newest first</option>
+                    <option value="joined-asc">Joined: oldest first</option>
+                </select>
+            </label>
+        </div>
+        <div class="notice" hidden id="notice" role="status"></div>
+        <div aria-live="polite" class="visually-hidden" id="result-status" role="status"></div>
+        <div class="results-list" id="results-list"></div>
+        <div class="empty-state" id="empty-state">
+            <div aria-hidden="true" class="empty-illustration">
+                <span class="illustration-dot dot-one"></span><span class="illustration-dot dot-two"></span>
+                <div class="mini-profile profile-back"><span class="mini-avatar"></span><span
+                        class="mini-line"></span><span class="mini-line short"></span></div>
+                <div class="mini-profile profile-front">
+                    <svg aria-hidden="true" class="icon">
+                        <use href="#icon-users"/>
+                    </svg>
+                    <span class="mini-line"></span><span class="mini-line short"></span></div>
+                <span class="illustration-search"><svg aria-hidden="true" class="icon"><use href="#icon-search"/></svg></span>
+            </div>
+            <h2 id="empty-title">Your next discovery starts here</h2>
+            <p id="empty-description">Find a familiar name, or someone who shares your interests.</p>
+            <button class="text-button" id="empty-action" type="button">Open advanced search
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-arrow"/>
+                </svg>
+            </button>
+        </div>
+        <nav aria-label="Search result pages" class="pagination" hidden id="pagination"></nav>
+    </section>
+</main>
+
+<footer class="site-footer"><span>Less complexity. More discovery.</span><span>Data from <a href="https://github.com"
+                                                                                            rel="noopener noreferrer"
+                                                                                            target="_blank">GitHub <svg
+        aria-hidden="true" class="icon"><use href="#icon-external"/></svg></a><span class="footer-divider">/</span>Unofficial tool</span>
+</footer>
+
+<dialog aria-describedby="advanced-description" aria-labelledby="advanced-title" id="advanced-dialog">
+    <form id="advanced-form">
+        <div class="dialog-header">
+            <div><h2 id="advanced-title">Advanced search</h2>
+                <p id="advanced-description">Choose a few filters to find the right people.</p></div>
+            <button aria-label="Close advanced search" class="icon-button" id="close-filters" type="button">
+                <svg aria-hidden="true" class="icon">
+                    <use href="#icon-close"/>
+                </svg>
+            </button>
+        </div>
+        <div class="dialog-body">
+            <div class="field-row"><label for="advanced-keyword">Name or ID</label><input autocomplete="off"
+                                                                                          id="advanced-keyword" maxlength="200"
+                                                                                          name="keyword"
+                                                                                          placeholder="Username, name, or numeric ID"
+                                                                                          type="text"></div>
+            <div class="field-row"><label for="account-type">Account type</label><select id="account-type" name="type">
+                <option value="">All accounts</option>
+                <option value="user">Personal accounts</option>
+                <option value="org">Organizations</option>
+            </select></div>
+            <div class="field-row"><label for="location">Location</label>
+                <div class="field-content"><input id="location" maxlength="80" name="location" placeholder="For example: Shanghai, Beijing, London"
+                                                  type="text">
+                    <p class="field-hint">Matches the location listed in their profile.</p></div>
+            </div>
+            <div class="field-row"><label for="language">Repository language</label>
+                <div class="field-content"><input autocomplete="off" id="language" list="languages" maxlength="40"
+                                                  name="language" placeholder="Select or enter a language"
+                                                  type="text">
+                    <p class="field-hint">Filters by the languages of their repositories.</p></div>
+            </div>
+            <div class="field-row"><span class="field-label" id="followers-label">Follower count</span>
+                <div aria-labelledby="followers-label" class="range-fields" role="group"><input aria-label="Minimum followers"
+                                                                                                max="999999999" min="0"
+                                                                                                name="followersMin" placeholder="Min"
+                                                                                                step="1"
+                                                                                                type="number"><span>-</span><input
+                        aria-label="Maximum followers" max="999999999" min="0" name="followersMax" placeholder="Max" step="1"
+                        type="number"></div>
+            </div>
+            <div class="field-row"><span class="field-label" id="repos-label">Repository count</span>
+                <div aria-labelledby="repos-label" class="range-fields" role="group"><input aria-label="Minimum repositories"
+                                                                                            max="999999999" min="0"
+                                                                                            name="reposMin" placeholder="Min"
+                                                                                            step="1"
+                                                                                            type="number"><span>-</span><input
+                        aria-label="Maximum repositories" max="999999999" min="0" name="reposMax" placeholder="Max" step="1"
+                        type="number"></div>
+            </div>
+            <div class="field-row"><span class="field-label" id="created-label">Joined</span>
+                <div aria-labelledby="created-label" class="range-fields" role="group"><input aria-label="Joined on or after"
+                                                                                              max="9999-12-31"
+                                                                                              min="2007-01-01"
+                                                                                              name="createdFrom"
+                                                                                              type="date"><span>-</span><input
+                        aria-label="Joined on or before" max="9999-12-31" min="2007-01-01" name="createdTo" type="date">
+                </div>
+            </div>
+            <div class="field-row"><span class="field-label">GitHub Sponsors</span><label class="checkbox-label"><input
+                    name="sponsorable" type="checkbox">Only sponsorable accounts</label></div>
+            <p class="form-error" hidden id="advanced-error" role="alert"></p>
+        </div>
+        <div class="dialog-footer">
+            <button class="text-button" id="reset-filters" type="button">Reset filters</button>
+            <div>
+                <button class="secondary-button" id="cancel-filters" type="button">Cancel</button>
+                <button class="primary-button" type="submit">Search
+                    <svg aria-hidden="true" class="icon">
+                        <use href="#icon-arrow"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </form>
+</dialog>
+<datalist id="languages">
+    <option value="JavaScript">
+    <option value="TypeScript">
+    <option value="Python">
+    <option value="Java">
+    <option value="Go">
+    <option value="Rust">
+    <option value="C">
+    <option value="C++">
+    <option value="C#">
+    <option value="PHP">
+    <option value="Ruby">
+    <option value="Swift">
+    <option value="Kotlin">
+    <option value="Dart">
+    <option value="Vue">
+    <option value="HTML">
+    <option value="CSS">
+    <option value="Shell">
+</datalist>
+<noscript><p class="noscript-notice">Enable JavaScript to search GitHub users in your browser.</p></noscript>
+</body>
+</html>
