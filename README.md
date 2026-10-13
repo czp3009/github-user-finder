@@ -2,6 +2,8 @@
 
 A lightweight tool for finding public GitHub users by username, display name, numeric ID, and profile filters.
 
+**Try it online:** [GitHub User Finder](https://czp3009.github.io/github-user-finder/)
+
 ## Usage
 
 - Enter a username, display name, or numeric ID and click **Search**.
